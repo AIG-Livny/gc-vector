@@ -182,6 +182,23 @@ typedef struct gcvector_iterator_t gcvector_iterator;
         (vec).size += 1;                                                                    \
     } while (0)
 
+// @brief gcvector_push_back_data - adds `array_size` elements to the end of the vector
+// @param vec - the vector
+// @param array - the array value to add
+// @param array_size - number of elements in array
+// @return void
+#define gcvector_push_back_data(vec, array, array_size)                                                            \
+    do {                                                                                                            \
+        gcvector_clib_assert( array );                                                                              \
+        gcvector_clib_assert( array_size );                                                                         \
+                                                                                                                    \
+        if( (vec).capacity < (vec).size + (array_size) ) {                                                          \
+            gcvector_reserve((vec), (vec).size + (array_size));                                                     \
+        }                                                                                                           \
+        gcvector_clib_memmove( (vec).data + ((vec).size * (vec).item_size), array, (array_size) * (vec).item_size );\
+        (vec).size += (array_size);                                                                                 \
+    } while (0)
+
 // @brief gcvector_insert - insert element at position pos to the vector
 // @param vec - the vector
 // @param pos - position in the vector where the new elements are inserted.

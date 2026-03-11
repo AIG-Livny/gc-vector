@@ -427,4 +427,34 @@ UTEST(test, vector_for_each) {
     ASSERT_EQ(((char*)a.data)[3], 3);
 }
 
+UTEST(test, vector_push_back_data) {
+    gcvector a;
+    gcvector_init(a,0,2,NULL);
+
+    char arr1[] = {1,2,3,4,5,6};
+    char arr2[3][2] = {{11,12},{13,14},{15,16}};
+
+    gcvector_push_back_data(a, arr1, 3);
+
+    ASSERT_EQ(gcvector_size(a), 3);
+
+    gcvector_push_back_data(a, arr2, 3);
+
+    ASSERT_EQ(gcvector_size(a), 6);
+
+    ASSERT_EQ(((char*)a.data)[0], 1);
+    ASSERT_EQ(((char*)a.data)[1], 2);
+    ASSERT_EQ(((char*)a.data)[2], 3);
+    ASSERT_EQ(((char*)a.data)[3], 4);
+    ASSERT_EQ(((char*)a.data)[4], 5);
+    ASSERT_EQ(((char*)a.data)[5], 6);
+
+    ASSERT_EQ(((char*)a.data)[6], 11);
+    ASSERT_EQ(((char*)a.data)[7], 12);
+    ASSERT_EQ(((char*)a.data)[8], 13);
+    ASSERT_EQ(((char*)a.data)[9], 14);
+    ASSERT_EQ(((char*)a.data)[10], 15);
+    ASSERT_EQ(((char*)a.data)[11], 16);
+}
+
 UTEST_MAIN();
