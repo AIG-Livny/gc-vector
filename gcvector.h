@@ -75,11 +75,11 @@ typedef struct gcvector_iterator_t gcvector_iterator;
 // @param vec - the vector
 // @param n - Minimum capacity for the vector.
 // @return void
-#define gcvector_reserve(vec, n)                \
-    do {                                        \
-        if ((vec).capacity < (n)) {             \
-            gcvector_grow((vec), (n));          \
-        }                                       \
+#define gcvector_reserve(vec, n) \
+    do { \
+        if ((vec).capacity < (n)) { \
+            gcvector_grow((vec), (n)); \
+        } \
     } while (0)
 
 // @brief gcvector_init - Initialize a vector.
@@ -89,48 +89,48 @@ typedef struct gcvector_iterator_t gcvector_iterator;
 // @param elem_destructor_fn - element destructor function
 // @return void
 #define gcvector_init(vec, _capacity, _item_size, _elem_destructor) \
-    do {                                                            \
-        (vec) = (gcvector){                                         \
-            .item_size = _item_size,                                \
-            .data = NULL,                                           \
-            .capacity = 0,                                          \
-            .size = 0,                                              \
-            .elem_destructor = (_elem_destructor)                   \
-        };                                                          \
-        gcvector_reserve((vec), (_capacity));                       \
+    do { \
+        (vec) = (gcvector){ \
+            .item_size = _item_size, \
+            .data = NULL, \
+            .capacity = 0, \
+            .size = 0, \
+            .elem_destructor = (_elem_destructor) \
+        }; \
+        gcvector_reserve((vec), (_capacity)); \
     } while (0)
 
 // @brief gcvector_erase - removes the element at index i from the vector
 // @param vec - the vector
 // @param i - index of element to remove
 // @return void
-#define gcvector_erase(vec, i)                                  \
-    do {                                                        \
-        if ((i) < (vec).size) {                                 \
-            if ((vec).elem_destructor) {                        \
-                (vec).elem_destructor(gcvector_at((vec),(i)));  \
-            }                                                   \
-            (vec).size = (vec).size - 1;                        \
-            size_t cv_bytes_ = (i) * (vec).item_size;           \
-            gcvector_clib_memmove(                              \
-                (vec).data + cv_bytes_,                         \
-                (vec).data + cv_bytes_ + (vec).item_size,       \
-                (vec).item_size * ((vec).size - (i)) );         \
-        }                                                       \
+#define gcvector_erase(vec, i) \
+    do { \
+        if ((i) < (vec).size) { \
+            if ((vec).elem_destructor) { \
+                (vec).elem_destructor(gcvector_at((vec),(i))); \
+            } \
+            (vec).size = (vec).size - 1; \
+            size_t cv_bytes_ = (i) * (vec).item_size; \
+            gcvector_clib_memmove( \
+                (vec).data + cv_bytes_, \
+                (vec).data + cv_bytes_ + (vec).item_size, \
+                (vec).item_size * ((vec).size - (i)) ); \
+        } \
     } while (0)
 
 // @brief gcvector_clear - erase all of the elements in the vector
 // @param vec - the vector
 // @return void
-#define gcvector_clear(vec)                                                             \
-    do {                                                                                \
-        if ((vec).elem_destructor) {                                                    \
-            size_t cv_clear_i__;                                                        \
-            for (cv_clear_i__ = 0; cv_clear_i__ < (vec).size; ++cv_clear_i__) {         \
+#define gcvector_clear(vec) \
+    do { \
+        if ((vec).elem_destructor) { \
+            size_t cv_clear_i__; \
+            for (cv_clear_i__ = 0; cv_clear_i__ < (vec).size; ++cv_clear_i__) { \
                 (vec).elem_destructor((vec).data + ( (vec).item_size * cv_clear_i__ )); \
-            }                                                                           \
-        }                                                                               \
-        (vec).size = 0;                                                                 \
+            } \
+        } \
+        (vec).size = 0; \
     } while (0)
 
 // @brief gcvector_begin - returns an iterator to first element of the vector
@@ -171,15 +171,15 @@ typedef struct gcvector_iterator_t gcvector_iterator;
 // @param vec - the vector
 // @param value - the array value to add
 // @return void
-#define gcvector_push_back(vec, value)                                                      \
-    do {                                                                                    \
-        size_t cv_push_back_cap__ = (vec).capacity;                                         \
-        if (cv_push_back_cap__ <= (vec).size) {                                             \
-            gcvector_grow((vec), gcvector_compute_next_grow(cv_push_back_cap__));           \
-        }                                                                                   \
-        void* cv_to = (vec).data + ((vec).size * (vec).item_size);                          \
-        gcvector_clib_memcpy(cv_to, (value), (vec).item_size);                              \
-        (vec).size += 1;                                                                    \
+#define gcvector_push_back(vec, value) \
+    do { \
+        size_t cv_push_back_cap__ = (vec).capacity; \
+        if (cv_push_back_cap__ <= (vec).size) { \
+            gcvector_grow((vec), gcvector_compute_next_grow(cv_push_back_cap__)); \
+        } \
+        void* cv_to = (vec).data + ((vec).size * (vec).item_size); \
+        gcvector_clib_memcpy(cv_to, (value), (vec).item_size); \
+        (vec).size += 1; \
     } while (0)
 
 // @brief gcvector_push_back_data - adds `array_size` elements to the end of the vector
@@ -187,16 +187,16 @@ typedef struct gcvector_iterator_t gcvector_iterator;
 // @param array - the array value to add
 // @param array_size - number of elements in array
 // @return void
-#define gcvector_push_back_data(vec, array, array_size)                                                            \
-    do {                                                                                                            \
-        gcvector_clib_assert( array );                                                                              \
-        gcvector_clib_assert( array_size );                                                                         \
-                                                                                                                    \
-        if( (vec).capacity < (vec).size + (array_size) ) {                                                          \
-            gcvector_reserve((vec), (vec).size + (array_size));                                                     \
-        }                                                                                                           \
+#define gcvector_push_back_data(vec, array, array_size) \
+    do { \
+        gcvector_clib_assert( array ); \
+        gcvector_clib_assert( array_size ); \
+ \
+        if( (vec).capacity < (vec).size + (array_size) ) { \
+            gcvector_reserve((vec), (vec).size + (array_size)); \
+        } \
         gcvector_clib_memmove( (vec).data + ((vec).size * (vec).item_size), array, (array_size) * (vec).item_size );\
-        (vec).size += (array_size);                                                                                 \
+        (vec).size += (array_size); \
     } while (0)
 
 // @brief gcvector_insert - insert element at position pos to the vector
@@ -204,55 +204,79 @@ typedef struct gcvector_iterator_t gcvector_iterator;
 // @param pos - position in the vector where the new elements are inserted.
 // @param val - value to be copied (or moved) to the inserted elements.
 // @return void
-#define gcvector_insert(vec, pos, value)                                                \
-    do {                                                                                \
-        if ((vec).capacity <= (vec).size) {                                             \
-            gcvector_grow((vec), gcvector_compute_next_grow((vec).capacity));           \
-        }                                                                               \
-        if ((pos) < (vec).size) {                                                       \
-            size_t cv_bytes_ = (pos) * (vec).item_size;                                 \
-            gcvector_clib_memmove(                                                      \
-                (vec).data + (cv_bytes_) + (vec).item_size,                             \
-                (vec).data + (cv_bytes_),                                               \
-                (vec).item_size * (((vec).size) - (pos)));                              \
-        }                                                                               \
-        gcvector_clib_memcpy((vec).data + ((vec).size * (vec).item_size), (value), (vec).item_size);  \
-        (vec).size += 1;                                                                \
+#define gcvector_insert(vec, pos, value) \
+    do { \
+        if ((vec).capacity <= (vec).size) { \
+            gcvector_grow((vec), gcvector_compute_next_grow((vec).capacity)); \
+        } \
+        if ((pos) < (vec).size) { \
+            size_t cv_bytes_ = (pos) * (vec).item_size; \
+            gcvector_clib_memmove( \
+                (vec).data + (cv_bytes_) + (vec).item_size, \
+                (vec).data + (cv_bytes_), \
+                (vec).item_size * (((vec).size) - (pos))); \
+        } \
+        gcvector_clib_memcpy((vec).data + ((vec).size * (vec).item_size), (value), (vec).item_size); \
+        (vec).size += 1; \
+    } while (0)
+
+// @brief gcvector_insert_data - insert elements at position pos to the vector
+// @param vec - the vector
+// @param pos - position in the vector where the new elements are inserted.
+// @param data - pointer from be copied data to the inserted elements.
+// @param count - count of data elements
+// @return void
+#define gcvector_insert_data(vec, pos, _data, count) \
+    do { \
+        if( (vec).capacity < ( (vec).size + (count) ) ) { \
+            gcvector_reserve((vec), (vec).size + (count)); \
+        } \
+        memmove( \
+            (vec).data + (( (pos) + (count) ) * (vec).item_size), \
+            (vec).data + ((pos) * (vec).item_size), \
+            (count) * (vec).item_size \
+        ); \
+        memmove( \
+            (vec).data + ((pos) * (vec).item_size), \
+            (_data), \
+            (count) * (vec).item_size \
+        ); \
+        (vec).size += (count); \
     } while (0)
 
 // @brief gcvector_pop_back - removes the last element from the vector
 // @param vec - the vector
 // @return void
-#define gcvector_pop_back(vec)                              \
-    do {                                                    \
-        if ( (vec).size ) {                                 \
-            if ((vec).elem_destructor) {                    \
-                (vec).elem_destructor(gcvector_back(vec));  \
-            }                                               \
-            (vec).size -= 1;                                \
-        }                                                   \
+#define gcvector_pop_back(vec) \
+    do { \
+        if ( (vec).size ) { \
+            if ((vec).elem_destructor) { \
+                (vec).elem_destructor(gcvector_back(vec)); \
+            } \
+            (vec).size -= 1; \
+        } \
     } while (0)
 
 // @brief gcvector_copy - copy a gcvector to another gcvector
 // @param from - the original vector
 // @param to - destination to which the function copy to
 // @return void
-#define gcvector_copy(from, to)                                                         \
-    do {                                                                                \
-        gcvector_clib_assert((from).item_size == (to).item_size );                      \
-        gcvector_grow(to, (from).size);                                                 \
-        (to).size = (from).size;                                                        \
-        gcvector_clib_memcpy((to).data, (from).data, (from).size * (from).item_size );  \
+#define gcvector_copy(from, to) \
+    do { \
+        gcvector_clib_assert((from).item_size == (to).item_size ); \
+        gcvector_grow(to, (from).size); \
+        (to).size = (from).size; \
+        gcvector_clib_memcpy((to).data, (from).data, (from).size * (from).item_size ); \
     } while (0)
 
 // @brief gcvector_swap - exchanges the content of the vector by the content of another vector of the same type
 // @param vec - the original vector
 // @param other - the other vector to swap content with
 // @return void
-#define gcvector_swap(vec, other)    \
-    do {                             \
-        gcvector cv_swap__ = vec;    \
-        vec             = other;     \
+#define gcvector_swap(vec, other) \
+    do { \
+        gcvector cv_swap__ = vec; \
+        vec             = other; \
         other           = cv_swap__; \
     } while (0)
 
@@ -261,28 +285,28 @@ typedef struct gcvector_iterator_t gcvector_iterator;
 // @param count - the new capacity to set
 // @return void
 // @internal
-#define gcvector_grow(vec, count)                                                   \
-    do {                                                                            \
-        const size_t cv_grow_sz__ = (count) * (vec).item_size;                      \
-        if ((vec).data) {                                                           \
-            void *cv_grow_p1__ = (vec).data;                                        \
+#define gcvector_grow(vec, count) \
+    do { \
+        const size_t cv_grow_sz__ = (count) * (vec).item_size; \
+        if ((vec).data) { \
+            void *cv_grow_p1__ = (vec).data; \
             void *cv_grow_p2__ = gcvector_clib_realloc(cv_grow_p1__, cv_grow_sz__); \
-            gcvector_clib_assert(cv_grow_p2__);                                     \
-            (vec).data = (cv_grow_p2__);                                            \
-        } else {                                                                    \
-            void *cv_grow_p__ = gcvector_clib_malloc(cv_grow_sz__);                 \
-            gcvector_clib_assert(cv_grow_p__);                                      \
-            (vec).data = (cv_grow_p__);                                             \
-            (vec).size = 0;                                                         \
-        }                                                                           \
-        (vec).capacity = (count);                                                   \
+            gcvector_clib_assert(cv_grow_p2__); \
+            (vec).data = (cv_grow_p2__); \
+        } else { \
+            void *cv_grow_p__ = gcvector_clib_malloc(cv_grow_sz__); \
+            gcvector_clib_assert(cv_grow_p__); \
+            (vec).data = (cv_grow_p__); \
+            (vec).size = 0; \
+        } \
+        (vec).capacity = (count); \
     } while (0)
 
 // @brief cvector_shrink_to_fit - requests the container to reduce its capacity to fit its size
 // @param vec - the vector
 // @return void
-#define gcvector_shrink_to_fit(vec)     \
-    do {                                \
+#define gcvector_shrink_to_fit(vec) \
+    do { \
         gcvector_grow(vec, (vec).size); \
     } while (0)
 
@@ -310,33 +334,33 @@ typedef struct gcvector_iterator_t gcvector_iterator;
 // @param count - new size of the vector
 // @param value - the value to initialize new elements with
 // @return void
-#define gcvector_resize(vec, count, value)                                      \
-    do {                                                                        \
-        size_t cv_resize_count__ = (size_t)(count);                             \
-        size_t cv_resize_sz__    = (vec).size;                                  \
-        if (cv_resize_count__ > cv_resize_sz__) {                               \
-            gcvector_reserve((vec), cv_resize_count__);                         \
-            (vec).size = cv_resize_count__;                                     \
-            do {                                                                \
+#define gcvector_resize(vec, count, value) \
+    do { \
+        size_t cv_resize_count__ = (size_t)(count); \
+        size_t cv_resize_sz__    = (vec).size; \
+        if (cv_resize_count__ > cv_resize_sz__) { \
+            gcvector_reserve((vec), cv_resize_count__); \
+            (vec).size = cv_resize_count__; \
+            do { \
                 void* cv_dst = (vec).data + (cv_resize_sz__ * (vec).item_size); \
-                gcvector_clib_memcpy(cv_dst, (value), (vec).item_size);         \
-                cv_resize_sz__ += 1;                                            \
-            } while (cv_resize_sz__ < cv_resize_count__);                       \
-        } else {                                                                \
-            while (cv_resize_count__ < cv_resize_sz__--) {                      \
-                gcvector_pop_back(vec);                                         \
-            }                                                                   \
-        }                                                                       \
+                gcvector_clib_memcpy(cv_dst, (value), (vec).item_size); \
+                cv_resize_sz__ += 1; \
+            } while (cv_resize_sz__ < cv_resize_count__); \
+        } else { \
+            while (cv_resize_count__ < cv_resize_sz__--) { \
+                gcvector_pop_back(vec); \
+            } \
+        } \
     } while (0)
 
 // @brief gcvector_free_data - frees all data memory of the vector (not vector itself)
 // @param vec - the vector
 // @return void
-#define gcvector_deinit(vec)                \
-    do {                                    \
-        gcvector_clear(vec);                \
-        gcvector_clib_free((vec).data);     \
-        (vec).data = NULL;                  \
+#define gcvector_deinit(vec) \
+    do { \
+        gcvector_clear(vec); \
+        gcvector_clib_free((vec).data); \
+        (vec).data = NULL; \
     } while (0)
 
 // @brief gcvector_capacity - gets the current capacity of the vector
@@ -401,13 +425,13 @@ typedef struct gcvector_iterator_t gcvector_iterator;
 //  @param vec - the vector
 //  @param func - function to be called on each element that takes each element as argument
 //  @return void
-#define gcvector_for_each(vec, func)                                            \
-    do {                                                                        \
-        gcvector_clib_assert(func);                                             \
-        size_t i;                                                               \
+#define gcvector_for_each(vec, func) \
+    do { \
+        gcvector_clib_assert(func); \
+        size_t i; \
         for (i = 0; i < ((vec).size * (vec.item_size)); i += (vec).item_size) { \
-            func((vec).data + i);                                               \
-        }                                                                       \
+            func((vec).data + i); \
+        } \
     } while (0)
 
 
