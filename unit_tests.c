@@ -429,6 +429,27 @@ UTEST(test, vector_for_each) {
     gcvector_deinit(a);
 }
 
+UTEST(test, erase_range) {
+    gcvector a;
+    gcvector_init(a,0,2,NULL);
+
+    int i;
+    for (i = 0; i < 10; ++i) {
+        char arr[] = {i,i};
+        gcvector_push_back(a, arr);
+    }
+    // 0,0  1,1  (2,2  3,3  4,4)  5,5  6,6  7,7  8,8  9,9
+    gcvector_erase_range(a, 2,5);
+
+    // 0,0  1,1  5,5  6,6  7,7  8,8  9,9
+    ASSERT_EQ(gcvector_size(a), (size_t)7);
+    ASSERT_EQ(gcvector_at(a,1)[0], 1);
+    ASSERT_EQ(gcvector_at(a,2)[0], 5);
+    ASSERT_EQ(gcvector_at(a,4)[0], 7);
+
+    gcvector_deinit(a);
+}
+
 UTEST(test, vector_push_back_data) {
     gcvector a;
     gcvector_init(a,0,2,NULL);

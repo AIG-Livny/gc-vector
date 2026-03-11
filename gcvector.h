@@ -119,6 +119,29 @@ typedef struct gcvector_iterator_t gcvector_iterator;
         } \
     } while (0)
 
+// @brief gcvector_erase_range - removes a range of elements from the vector
+// @param vec - the vector
+// @param from - starting index of the range to remove (inclusive)
+// @param to - ending index of the range to remove (exclusive)
+// @return void
+#define gcvector_erase_range(vec, from, to) \
+    do { \
+        if ((from) < (vec).size && (to) < (vec).size && (from) < (to)) { \
+            if ((vec).elem_destructor) { \
+                for (int k = (from); k < (to); k++) { \
+                    (vec).elem_destructor((vec).data + ( (vec).item_size * k )); \
+                } \
+            } \
+            const size_t range = (to) - (from); \
+            gcvector_clib_memmove( \
+                (vec).data + ((from) * (vec).item_size), \
+                (vec).data + ((to) * (vec).item_size), \
+                (vec).item_size * ((vec).size - (to)) \
+            ); \
+            (vec).size -= range; \
+        } \
+    } while (0)
+
 // @brief gcvector_clear - erase all of the elements in the vector
 // @param vec - the vector
 // @return void
