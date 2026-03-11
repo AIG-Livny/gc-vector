@@ -1,14 +1,5 @@
-Implementation of generic vector or typeless vector. It contains array of one sized arrays in one memory block.
-Code based on Evan Teran's c-vector (eteran/c-vector) and adapted to use in generic vector implementation.
-
-Memory organization:
-    For 3 bytes structures it will be like:
-
-    |----------One memory block-----------...  |
-    +-----------+-----------+-----------+
-	| [1][2][3] | [1][2][3] | [1][2][3] |
-	+-----------+-----------+-----------+....
-
+Implementation of generic vector or typeless vector. It contains runtime-calculated-size arrays.
+Code based on Evan Teran's c-vector (eteran/c-vector) and adapted to use in this generic vector implementation.
 
 Example:
 ```c
@@ -19,9 +10,14 @@ Example:
 
     gcvector_push_back(v, arr1);
 
-    gcvector_iterator it = gcvector_begin(v);
-    gcvector_for_each_in(it, v) {
+    gcvector_iterator it1 = gcvector_begin(v);
+    gcvector_for_each_in(it1, v) {
         //do something
+    }
+
+    gcvector_iterator it2 = gcvector_end(v);
+    if ( gcvector_iterator_cmp(it1, == ,it2) ) {
+        //
     }
 
     gcvector_for_each(a,swap_bytes);
