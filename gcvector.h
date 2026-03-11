@@ -1,9 +1,8 @@
 #ifndef GCVECTOR_H_
 #define GCVECTOR_H_
-/*
- * Generic c vector.
- * Based on code Evan Teran's c-vector (https://github.com/eteran/c-vector)
-*/
+
+//  Generic c vector.
+//  Based on code Evan Teran's c-vector (https://github.com/eteran/c-vector)
 
 // in case C library malloc() needs extra protection,
 // allow these defines to be overridden.
@@ -341,12 +340,13 @@ typedef struct gcvector_iterator_t gcvector_iterator;
 #define gcvector_size(vec) \
     (vec).size
 
-// @brief gcvector_iterator_equals - compare iterators
+// @brief gcvector_iterator_cmp - compare iterators
 // @param it1 - iterator 1
+// @param operator - compare operator [>,<,==,!=,>=,<=]
 // @param it2 - iterator 2
-// @return non-zero if equals, zero if not equals
-#define gcvector_iterator_equals(it1, it2) \
-    (((it1).vector == (it2).vector) && ((it1).point == (it2).point))
+// @return non-zero (true) if expression right
+#define gcvector_iterator_cmp(it1, operator , it2) \
+    (((it1).vector == (it2).vector) && ((it1).point operator (it2).point))
 
 // @brief gcvector_iterator_less - compare iterators
 // @param it1 - iterator 1
@@ -373,21 +373,17 @@ typedef struct gcvector_iterator_t gcvector_iterator;
 #define gcvector_iterator_deref(it) \
     ((unsigned char*)(it).point)
 
-/**
- * @brief gcvector_for_each_in - for header to iterate over vector each element's address
- * @param it - iterator of type pointer to vector element
- * @param vec - the vector
- * @return void
- */
+//  @brief gcvector_for_each_in - for header to iterate over vector each element's address
+//  @param it - iterator of type pointer to vector element
+//  @param vec - the vector
+//  @return void
 #define gcvector_for_each_in(it, vec) \
     for (it = gcvector_begin(vec); gcvector_iterator_less(it,gcvector_end(vec)); gcvector_iterator_next(it))
 
-/**
- * @brief gcvector_for_each - call function func on each element of the vector
- * @param vec - the vector
- * @param func - function to be called on each element that takes each element as argument
- * @return void
- */
+//  @brief gcvector_for_each - call function func on each element of the vector
+//  @param vec - the vector
+//  @param func - function to be called on each element that takes each element as argument
+//  @return void
 #define gcvector_for_each(vec, func)                                            \
     do {                                                                        \
         gcvector_clib_assert(func);                                             \

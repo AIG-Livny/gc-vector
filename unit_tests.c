@@ -94,7 +94,7 @@ UTEST(test, vector_empty) {
     gcvector_init(v,0,2,NULL);
     ASSERT_TRUE(gcvector_capacity(v) == 0);
     ASSERT_TRUE(gcvector_size(v) == 0);
-    ASSERT_TRUE(gcvector_iterator_equals(gcvector_begin(v), gcvector_end(v)));
+    ASSERT_TRUE(gcvector_iterator_cmp(gcvector_begin(v) ,==, gcvector_end(v)));
     ASSERT_TRUE(gcvector_empty(v));
 
     gcvector_deinit(v);
@@ -145,7 +145,7 @@ UTEST(test, vector_iterator) {
     gcvector_iterator it = gcvector_begin(v);
 
     int i = 0;
-    for (it = gcvector_begin(v); !gcvector_iterator_equals(it,gcvector_end(v)); gcvector_iterator_next(it)) {
+    for (it = gcvector_begin(v); gcvector_iterator_cmp(it, != ,gcvector_end(v)); gcvector_iterator_next(it)) {
         switch (i) {
         case 0:
             ASSERT_TRUE(gcvector_iterator_deref(it)[0] == 0);
